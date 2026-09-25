@@ -6,6 +6,7 @@ import {
   MAGE_BOOK_ID,
   CharacterClassDefinition,
 } from "./definitions";
+import { getMageProgression, MageProgressionState } from "./progression";
 import { selectClass } from "./service";
 import { hasClassAssignment } from "./storage";
 
@@ -24,19 +25,13 @@ const mageGuideSections = [
     id: "progression",
     title: "Progression",
     summary: "The XP-based path to new Mage milestones.",
-    body:
-      "Mage growth is driven by the shared custom XP system.\n\n" +
-      "As your XP rises, your Mage progression advances and unlocks future class milestones.\n\n" +
-      "This guide will track the path from novice caster to advanced spell-user as the class system expands.",
+    getBody: getProgressionGuideBody,
   },
   {
     id: "abilities",
     title: "Abilities",
     summary: "Current and upcoming Magic abilities.",
-    body:
-      "Mage abilities are not granted all at once.\n\n" +
-      "The class will unlock new powers through progression, milestones, and later spell-learning systems.\n\n" +
-      "Current focus: establish the class foundation, progression rules, and the first learnable spell or crafting interaction.",
+    getBody: getAbilitiesGuideBody,
   },
   {
     id: "next-steps",
@@ -89,15 +84,58 @@ async function openMageGuide(player: Player): Promise<void> {
       return;
     }
 
+    const progression = getMageProgression(player);
+
     await new MessageFormData()
       .title(`Mage Guide - ${section.title}`)
-      .body(section.body)
+      .body(getMageGuideSectionBody(section, progression))
       .button1("Back")
       .button2("Close")
       .show(player);
   } catch {
     player.sendMessage("Unable to open the Mage Guide right now.");
   }
+}
+
+function getMageGuideSectionBody(
+  section: (typeof mageGuideSections)[number],
+  progression: MageProgressionState,
+): string {
+  if ("getBody" in section) {
+    return section.getBody(progression);
+  }
+
+  return section.body;
+}
+
+function getProgressionGuideBody(progression: MageProgressionState): string {
+  const xpRemaining = Math.max(
+    progression.nextThreshold - progression.totalXp,
+    0,
+  );
+  const unlockStatus = progression.firstMilestoneUnlocked
+    ? `${progression.unlockName} unlocked.`
+    : `${xpRemaining} XP until ${progression.unlockName}.`;
+
+  return (
+    "Mage growth is driven by the shared custom XP system.\n\n" +
+    `Private Mage Rank: ${progression.rank}\n` +
+    `Custom XP: ${progression.totalXp}/${progression.nextThreshold}\n` +
+    `First Milestone: ${unlockStatus}\n\n` +
+    "Your rank is only shown here for your own progress tracking. It is not announced publicly."
+  );
+}
+
+function getAbilitiesGuideBody(progression: MageProgressionState): string {
+  const focusStatus = progression.firstMilestoneUnlocked
+    ? "Unlocked: Arcane Focus is active as your first Mage milestone."
+    : `Locked: Arcane Focus unlocks at ${progression.nextThreshold} custom XP.`;
+
+  return (
+    "Mage abilities are not granted all at once.\n\n" +
+    `${focusStatus}\n\n` +
+    "The class will unlock new powers through progression, milestones, and later spell-learning systems."
+  );
 }
 
 async function showClassSelection(player: Player): Promise<void> {
