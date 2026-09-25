@@ -1,0 +1,15 @@
+{
+  "format_version": "1.20.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "customxp:class_selector_book"
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "Class Selection Book"
+      },
+      "minecraft:icon": "customxp_class_selector_book",
+      "minecraft:max_stack_size": 1
+    }
+  }
+}

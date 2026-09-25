@@ -1,0 +1,12 @@
+{
+  "resource_pack_name": "customxp",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "customxp_class_selector_book": {
+      "textures": "textures/items/book_normal"
+    },
+    "customxp_mage_book": {
+      "textures": "textures/items/book_normal"
+    }
+  }
+}

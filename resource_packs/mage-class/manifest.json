@@ -1,0 +1,18 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Mage Class Resources",
+    "description": "Resources for the Mage Class behavior pack.",
+    "uuid": "2d7ed858-97eb-48a0-b180-7c80d1ce9a48",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 20, 30]
+  },
+  "modules": [
+    {
+      "description": "Mage Class Resources",
+      "type": "resources",
+      "uuid": "503fe660-142b-46a2-8fec-34a54e944720",
+      "version": [1, 0, 0]
+    }
+  ]
+}
