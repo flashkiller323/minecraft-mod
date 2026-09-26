@@ -43,6 +43,19 @@ export function grantSelectorBookIfMissing(player: Player): boolean {
   );
 }
 
+export function grantItemToInventory(
+  player: Player,
+  itemId: string,
+  amount: number,
+): boolean {
+  const inventory = getInventory(player);
+  if (!inventory) {
+    return false;
+  }
+
+  return inventory.addItem(new ItemStack(itemId, amount)) === undefined;
+}
+
 export function replaceSelectorBook(
   player: Player,
   classBookItemId: string,
